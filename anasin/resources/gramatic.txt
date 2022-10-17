@@ -1,0 +1,148 @@
+programa (progama)
+decClasse(declaracoes_de_classe)
+impMetodos (implementacao_de_metodos)
+classe (classe)
+corpoClasse (corpo_de_classe)
+sessPriv (sessao-privada)
+sessPubl (sessao-publica)
+decs (declaracoes)
+dec (declaracao)
+tipo
+argumentos
+expr (expressao)
+exprSimples (expressao_simples)
+termo 
+fator
+desig (designador)
+listExprs (lista_expressoes)
+metodo
+param (parametro)
+params (parametros)
+corpoMetodo (corpo_metodo)
+inst (instrucao)
+insts (instrucoes)
+
+RECURSAO A ESQUERDA:
+A -> Aalfa|beta
+
+resolvendo: 
+A -> beta rest
+rest -> alfa A | {}  //vazio
+
+
+programa => decClasse impMetodos
+-----------------------------
+decClasse => decClasse classe | classe   // ESTE TRECHO FOI INSERIDO ABAIXO, ELIMINANDO-SE A RECURSAO A ESQUERDA
+-----------------------------
+decClasse => classe rest
+rest => classe rest |{}
+
+classe => CLASS ID corpoClasse PONTOVIRGULA
+corpoClasse => ABRECHAVE sessPriv sessPubl FECHACHAVE
+sessPriv => PRIVATE DOISPONTOS decs 
+		| {}
+sessPubl => PUBLIC DOISPONTOS decs 
+		| {}
+-----------------------------
+decs => decs dec | dec    //trecho removido. Recursao Esquerda
+-----------------------------
+decs => dec rest2
+rest2 => dec rest2 | {}
+dec => tipo ID PONTOVIRGULA 
+	  |tipo ID ABRECOL NUM FECHACOL PONTOVIRGULA
+	  |tipo ID ABREPAR argumentos FECHAPAR PONTOVIRGULA
+tipo => CHAR 
+	  |INT
+	  |FLOAT
+	  |VOID
+	  |ID
+-----------------------------
+expr => expr RELOP exprSimples | exprSimples  //trecho removido. Recursao Esquerda
+-----------------------------
+expr => exprSimples rest3
+rest3 => RELOP rest3 |{}
+
+-----------------------------
+exprSimples => exprSimples ARITOP termo | exprSimples LOGOP termo | termo
+-----------------------------
+exprSimples => termo rest4
+rest4 => ARITOP termo rest4
+		|LOGOP termo rest4 |{}
+
+-----------------------------
+termo => termo MULTOP fator | fator
+-----------------------------		 
+termo => fator rest5
+rest5 => MULTOP fator rest5 |{}
+fator => desig
+		|desig ABREPAR listExprs FECHAPAR
+		|desig ABRECOL listExprs FECHACOL
+		|NUM
+		|ABREPAR expr FECHAPAR
+		|NOT fator
+		|CARACT
+		|NEW ID ABREPAR listExprs FECHAPAR
+		|NEW ID ABREPAR FECHAPAR
+
+-----------------------------
+listExprs => listExprs VIRGULA expr | expr
+-----------------------------
+listExprs => expr rest6
+rest6 => VIRGULA expr rest6|{}
+-----------------------------
+argumentos => argumentos VIRGULA tipo | tipo
+-----------------------------
+argumentos => tipo rest7
+rest7 => VIRGULA tipo rest7|{}
+-----------------------------
+impMetodos => impMetodos metodo | metodo
+-----------------------------
+impMetodos => metodo rest8
+rest8 => metodo rest8|{}
+metodo => tipo ID RESESC ID ABREPAR parametros FECHAPAR corpoMetodo
+		| tipo MAIN ABREPAR FECHAPAR corpoMetodo
+
+-----------------------------
+params => params VIRGULA param | param
+-----------------------------
+params => param rest9
+rest9 => VIRGULA param rest9|{}
+
+param => tipo ID
+corpoMetodo => ABRECHAVE insts FECHACHAVE
+-----------------------------
+insts => insts inst | inst
+----------------------------- 
+insts => inst rest10
+rest10 => inst rest10|{}
+______________________________________
+----------------------- 
+inst => desig OPATR expr PONTOVIRGULA
+	  |desig ABRECOL exprSimples FECHACOL OPATR expr PONTOVIRGULA
+	  |desig ABREPAR listExprs FECHAPAR PONTOVIRGULA
+	  |desig ABREPAR FECHAPAR PONTOVIRGULA
+	  |IF ABREPAR expr FECHAPAR inst
+	  |IF ABREPAR expr FECHAPAR inst else inst
+	  |WHILE ABREPAR expr FECHAPAR inst
+	  |ABRECHAVE inst FECHACHAVE
+	  |DELETE desig PONTOVIRGULA
+------------------------
+inst => desig inst2 
+	  |IF ABREPAR expr FECHAPAR inst inst4
+	  |WHILE ABREPAR expr FECHAPAR inst
+	  |ABRECHAVE inst FECHACHAVE
+	  |DELETE desig PONTOVIRGULA
+
+
+inst2 => OPATR expr PONTOVIRGULA 
+      |ABRECOL exprSimples FECHACOL OPATR expr PONTOVIRGULA 
+	  |ABREPAR inst3
+	  
+inst3 => listExprs FECHAPAR PONTOVIRGULA
+	  |FECHAPAR PONTOVIRGULA
+
+inst4 => else inst | {}
+
+_____________________________________
+desig => desig PONTO ID
+	  |ID

@@ -1,0 +1,130 @@
+programa (progama)
+decClasse(declaracoes_de_classe)
+impMetodos (implementacao_de_metodos)
+classe (classe)
+corpoClasse (corpo_de_classe)
+sessPriv (sessao-privada)
+sessPubl (sessao-publica)
+decs (declaracoes)
+dec (declaracao)
+tipo
+argumentos
+expr (expressao)
+exprSimples (expressao_simples)
+termo 
+fator
+design (designador)
+listExprs (lista_expressoes)
+metodo
+param (parametro)
+params (parametros)
+corpoMetodo (corpo_metodo)
+inst (instrucao)
+insts (instrucoes)
+
+RECURSAO A ESQUERDA:
+A -> A alfa|beta
+
+resolvendo: 
+A -> beta rest
+rest -> alfa A | {}  //vazio
+
+___________________________________________________
+
+programa => decClasse impMetodos
+
+decClasse => classe rest
+rest => classe rest |{}
+
+classe => CLASS ID corpoClasse PONTOVIRGULA
+
+corpoClasse => ABRECHAVE sessPriv sessPubl FECHACHAVE
+
+sessPriv => PRIVATE DOISPONTOS decs |{}
+
+sessPubl => PUBLIC DOISPONTOS decs  |{}
+
+decs => dec rest2
+rest2 => dec rest2 | {}
+
+dec =>  tipo ID  dec2 
+
+dec2 => PONTOVIRGULA 
+	    |ABRECOL NUM FECHACOL PONTOVIRGULA
+	    |ABREPAR argumentos FECHAPAR PONTOVIRGULA
+
+tipo => CHAR 
+	    |INT
+	    |FLOAT
+	    |VOID
+	    |ID
+
+expr => exprSimples rest3
+rest3 => RELOP exprSimples rest3 |{}
+
+exprSimples => termo rest4
+rest4 => ARITOP termo rest4
+		|LOGOP termo rest4 |{}
+
+termo => fator rest5
+rest5 => MULTOP fator rest5 |{}
+
+fator => design fator2
+		|NUM
+		|ABREPAR expr FECHAPAR
+		|NOT fator
+		|CARACT
+		|NEW ID ABREPAR fator3
+
+fator2=> ABREPAR listExprs FECHAPAR
+        |ABRECOL listExprs FECHACOL
+        |{}
+
+fator3=> listExprs FECHAPAR
+        |FECHAPAR
+
+listExprs => expr rest6
+rest6 => VIRGULA expr rest6 |{}
+
+argumentos => tipo rest7
+rest7 => VIRGULA tipo rest7|{}
+
+impMetodos => metodo rest8
+rest8 => metodo rest8 |{}
+
+metodo => tipo  metodo2
+
+metodo2 => ID RESESC ID ABREPAR params FECHAPAR corpoMetodo
+        |MAIN ABREPAR FECHAPAR corpoMetodo
+
+
+params => param rest9
+rest9 => VIRGULA param rest9 |{}
+
+param => tipo ID
+
+corpoMetodo => ABRECHAVE insts FECHACHAVE
+
+insts => inst rest10
+rest10 => inst rest10 |{}
+
+inst => design inst2 
+	   |IF ABREPAR expr FECHAPAR inst inst4
+	   |WHILE ABREPAR expr FECHAPAR inst
+	   |ABRECHAVE inst FECHACHAVE
+	   |DELETE design PONTOVIRGULA
+
+
+inst2 =>PONTOVIRGULA 
+       |OPATR expr PONTOVIRGULA 
+       |ABRECOL exprSimples FECHACOL OPATR expr PONTOVIRGULA 
+	   |ABREPAR inst3
+       |{}
+	  
+inst3 => listExprs FECHAPAR PONTOVIRGULA
+	   |FECHAPAR PONTOVIRGULA
+
+inst4 => else inst |{}
+
+design => ID rest11
+rest11=> PONTO ID rest11 |{}

@@ -1,0 +1,16 @@
+class alfa{
+private:
+int teste
+public:
+char letras[10];
+int temp;
+};
+
+
+void main()
+{
+alfa beto;
+beto.temp = 10;
+beto.letras[2] = ;
+if(beto.temp > 5)
+beto.letras[2] = 'z';

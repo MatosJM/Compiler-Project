@@ -1,0 +1,4 @@
+int i;
+char l;
+
+i = 2

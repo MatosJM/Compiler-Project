@@ -1,0 +1,9 @@
+int main(){
+	char nome[30] = 'j';
+	int ano_nasc;
+	int idade = 0;
+	float salario = ;
+	ano_nasc = ;
+	idade = 2022 - ano_nasc;
+	
+}
